@@ -1,4 +1,5 @@
 ﻿using apiContact.Data;
+using apiContact.Models.Dtos;
 using apiContact.Models.Entity;
 using Microsoft.AspNetCore.Mvc;
 
@@ -41,11 +42,18 @@ namespace apiContact.Controllers
         }
 
         [HttpPost]
-        public IActionResult AddContact(Contact contact)
+        public IActionResult AddContact(AddRequestDto request)
         {
-            _dbContext.Contacts.Add(contact);
-            _dbContext.SaveChanges();
-            return CreatedAtAction(nameof(GetContact), new { id = contact.Id }, contact);
+           var dominModel = new Contact { 
+               Id = Guid.NewGuid(),
+               Name = request.Name, 
+                Email = request.Email, 
+                Phone = request.Phone, 
+                IsActive = request.IsActive 
+            };
+              _dbContext.Contacts.Add(dominModel);
+                _dbContext.SaveChanges();
+            return CreatedAtAction(nameof(GetContact), new { id = dominModel.Id }, dominModel);
         }
 
         [HttpDelete("{id:guid}")]
